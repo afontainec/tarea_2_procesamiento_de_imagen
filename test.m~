@@ -2,85 +2,92 @@ clear all
 close all
 
 
-i=1;
-figCount = 1;
+fig=1;
 
 
 N=512;
 
-
+Name = ["Red", "Green", "Blue"];
 % Display Image
 I = imread('venado.png');
-figure(1);
-imshow(I,[]);title('Original')
 
+figure(fig);
+fig = fig + 1;
+imshow(I);title('Original a color');
 
-Blue  = I(:,:,3);
-f = double(Blue);
-figure(2);
-F = fft2(f);
-F_ = fftshift(F);
-H = log(F_);
-G = H;
-
-val = 0;
-size = 50;
-inner = 100;
-limit = 1024-size;
-
-threshold = 10;
-for i = 1:limit
-    if( (i < 512 - inner) || i > (512 +  inner - size))
-    s = i;
-    f = i + size;
-    box = real(H(s:f, s:f));   % Box where we will operate
-    imBox = imag(H(s:f, s:f));
+J = I;
+for c = 1:1
+    C  = I(:,:,c);
+    figure(fig);
+    fig = fig + 1;
+    color = Name(1);
+    imshow(C,[]);title(strcat('Original Color ', color) );
     
-    m = median(box);
-    %B = m + imBox;
-    G(s:f, s:f) = zeros(f -s , f-);
+    
+    f = double(C);
+    figure(fig);
+    fig = fig + 1;
+    
+    F = fft2(f);
+    F_ = fftshift(F);
+    H = log(F_);
+    G = H;
+    
+    
+    
+    
+    
+    
+    
+    
+    % imtool(H,[]);title('Transformada')
+    
+    
+    figure(fig);
+    fig = fig + 1;
+    width = 10;
+    gap = 10;
+    val = [0 0];
+    for circ = 2:2
+        T = G;
+        r = circ * width;
+        col = val(mod(circ, 2) + 1);
+        m = min(min(G((512-r-width):(512 - gap),(512-r-width):(512-r))));
+        function miniz
+        G((512-r-width):(512 - gap),(512-r-width):(512-r)) = G((512-r-width):(512 - gap),(512-r-width):(512-r)) - m;
+        G((512 + gap):(512+r+ width),(512-r-width):(512-r)) = m ;
+        disp(m);
+        
+        G((512-r-width):(512 - gap),(512+r):(512+r+width)) = m;
+        G((512 + gap):(512+r+ width),(512+r):(512+r+width)) = m;
+        
+        G((512-r - width):(512 - r),(512-r):(512 - gap)) = m;
+        G((512-r - width):(512 - r),(512 + gap):(512 + r)) = m;
+        
+        G((512+r):(512 + r + width),(512-r):(512 - gap)) = m;
+        G((512+r):(512 + r + width),(512+ gap):(512+r)) = m;
+        
+        
+        imshow(G,[]);title('Transformada Ajustada')
+        pause(0.2);
     end
+    
+    
+    figure(fig);
+    fig = fig + 1;
+    
+    g=ifft2(fftshift(exp(G)));
+    imshow(g,[]);title('devuelta')
+    
+    
+    J(:,:,c) = g;
 end
 
+figure(fig);
+fig = fig + 1;
+imshow(J,[]);title('Final a color')
 
 
-% for i = 1:limit
-%     s = 1024 - i - size;
-%     if(s == 0)
-%         s = 1;
-%     end
-%     f = 1024 - i;
-%     G(s:f, i:(i+size)) = H(s:f, i:(i+size));
-% end
-
-% limit = 1024-size;
-% for i = 1:limit
-%     s = 512 - size/2;
-%     f = 512 + size/2;
-%     G(s:f, i:(i + size)) = val;
-%     G(i:(i + size), s:f) = val;
-% 
-% end
-
-% size = 200;
-% s = 512 - size/2;
-% f = 512 + size/2;
-% G(s:f, s:f) = 0;
-
-% G = H - G;
-
-
-% G = not(G);
-
-
-
-
-imshow(G,[]);title('Transformada')
-
-
-figure(3);
-g=ifft2(fftshift(exp(G)));
-imshow(g,[]);title('devuelta')
 
 
 
