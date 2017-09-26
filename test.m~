@@ -1,7 +1,5 @@
-clear all
-close all
-
-
+clear all;
+close all;
 fig=1;
 
 
@@ -47,25 +45,31 @@ for c = 1:1
     fig = fig + 1;
     width = 10;
     gap = 10;
-    val = [0 0];
-    for circ = 2:2
+    val = [0 20];
+    init = 2;
+    for circ = init:10
         T = G;
-        r = circ * width;
+        r = circ * width + circ -(ini;
         col = val(mod(circ, 2) + 1);
-        m = min(min(G((512-r-width):(512 - gap),(512-r-width):(512-r))));
-        function miniz
-        G((512-r-width):(512 - gap),(512-r-width):(512-r)) = G((512-r-width):(512 - gap),(512-r-width):(512-r)) - m;
-        G((512 + gap):(512+r+ width),(512-r-width):(512-r)) = m ;
-        disp(m);
+        outerN = 512 - r - width;
+        innerN = 512 - r;
+        gapN = 512 - gap;
+        outerP = 512 + r + width;
+        innerP = 512 + r;
+        gapP = 512 + gap;
+
+        m = min(min(G(outerN:gapN,outerN:innerN)));
+        G(outerN:gapN,outerN:innerN) = m;
+        G(gapP:outerP,outerN:innerN) = m ;
         
-        G((512-r-width):(512 - gap),(512+r):(512+r+width)) = m;
-        G((512 + gap):(512+r+ width),(512+r):(512+r+width)) = m;
+        G(outerN:gapN,innerP:outerP) = m;
+        G(gapP:outerP,innerP:outerP) = m;
         
-        G((512-r - width):(512 - r),(512-r):(512 - gap)) = m;
-        G((512-r - width):(512 - r),(512 + gap):(512 + r)) = m;
+        G(outerN:innerN,innerN:gapN) = m;
+        G(outerN:innerN,gapP:innerP) = m;
         
-        G((512+r):(512 + r + width),(512-r):(512 - gap)) = m;
-        G((512+r):(512 + r + width),(512+ gap):(512+r)) = m;
+        G(innerP:outerP,innerN:gapN) = m;
+        G(innerP:outerP,gapP:innerP) = m;
         
         
         imshow(G,[]);title('Transformada Ajustada')

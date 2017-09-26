@@ -1,11 +1,5 @@
-clear all
-close all
-
-
-function func = minimize(A, m)
-    A = m;
-end
-
+clear all;
+close all;
 fig=1;
 
 
@@ -51,15 +45,17 @@ for c = 1:1
     fig = fig + 1;
     width = 10;
     gap = 10;
-    val = [0 0];
-    for circ = 2:2
+    val = [0 20];
+    
+    for circ = 2:10
         T = G;
-        r = circ * width;
+        r = circ * width + 40;
         col = val(mod(circ, 2) + 1);
+        outerN = 512;
+
         m = min(min(G((512-r-width):(512 - gap),(512-r-width):(512-r))));
-        G((512-r-width):(512 - gap),(512-r-width):(512-r)) = G((512-r-width):(512 - gap),(512-r-width):(512-r)) - m;
+        G((512-r-width):(512 - gap),(512-r-width):(512-r)) = m;
         G((512 + gap):(512+r+ width),(512-r-width):(512-r)) = m ;
-        disp(m);
         
         G((512-r-width):(512 - gap),(512+r):(512+r+width)) = m;
         G((512 + gap):(512+r+ width),(512+r):(512+r+width)) = m;
