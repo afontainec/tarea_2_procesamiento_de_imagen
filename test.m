@@ -86,11 +86,14 @@ for c = 2:3
     end
     
     
-    threshold = [11 12 13];
+    threshold = [11 12 10];
     W = diff>threshold(c);
     switch c
         case 2
             W(704:994, 54:811) = 0;
+            W(652:682, 394:429) = 0;
+        case 3
+            W(704:994, 67:781) = 0;
             W(652:682, 394:429) = 0;
     end
     size = [60 90 200];
@@ -154,11 +157,11 @@ for c = 1:3
     WF(:,:,c) = K;
 end
 
-if(display)
+% if(display)
     figure(fig);
     fig = fig + 1;
     imshow(WF);title('Final sin reja')
-end
+% end
 
 if(display)
     figure(fig);

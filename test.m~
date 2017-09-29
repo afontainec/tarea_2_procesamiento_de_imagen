@@ -21,7 +21,7 @@ end
 FENCE = zeros(1024, 1024);
 
 J = I;
-for c = 2:2
+for c = 3:3
     C  = I(:,:,c);
     color = Name(c);
     if(display)
@@ -86,20 +86,30 @@ for c = 2:2
     end
     
     
-    threshold = [11 13 13];
+    threshold = [11 12 10];
     W = diff>threshold(c);
-    size = [60 60 200];
+    switch c
+        case 2
+            W(704:994, 54:811) = 0;
+            W(652:682, 394:429) = 0;
+        case 3
+            W(704:994, 67:781) = 0;
+                        W(652:682, 394:429) = 0;
+
+
+    end
+    size = [60 90 200];
     TW = bwareaopen(W,size(c));
     %     TW(715:998, 58:820) = 0;
     imtool(TW,[]);
     
-    threshold = [-12 -10 -10];
+    threshold = [-12 -9 -10];
     size = [60, 120, 250];
     temp = diff < threshold(c);
     BL = zeros(length(temp), length(temp));
     switch c
         case 2
-            BL(704:1024, 1:991) = temp(704:1024, 1:991);
+            BL(704:1024, 1:764) = temp(704:1024, 1:764);
         case 3
             BL(720:1024, 1:838) = temp(720:1024, 1:838);
         otherwise
@@ -112,9 +122,9 @@ for c = 2:2
     T = TB + TW;
     
     if(display)
-    figure(fig);
-    fig = fig + 1;
-    imshow(T,[]);title('Differencia binaria')
+        figure(fig);
+        fig = fig + 1;
+        imshow(T,[]);title('Differencia binaria')
     end
     
     
@@ -126,11 +136,11 @@ end
 
 size = 110;
 FENCE = bwareaopen(FENCE,size);
-if(display)
+% if(display)
     figure(fig);
     fig = fig + 1;
     imshow(FENCE);title('Reja binaria')
-end
+% end
 % F = fft2(FENCE);
 % F_ = fftshift(F);
 % H = log(F_ + 1);
