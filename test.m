@@ -21,7 +21,7 @@ end
 FENCE = zeros(1024, 1024);
 
 J = I;
-for c = 1:3
+for c = 2:3
     C  = I(:,:,c);
     color = Name(c);
     if(display)
@@ -86,21 +86,37 @@ for c = 1:3
     end
     
     
-    threshold = [11 13 13];
+    threshold = [11 12 13];
     W = diff>threshold(c);
-    size = 60;
-    TW = bwareaopen(W,size);
-    TW(715:998, 58:820) = 0;
+    switch c
+        case 2
+            W(704:994, 54:811) = 0;
+            W(652:682, 394:429) = 0;
+    end
+    size = [60 90 200];
+    TW = bwareaopen(W,size(c));
+    %     TW(715:998, 58:820) = 0;
+    imtool(TW,[]);
     
-    threshold = [-12 -10 -10];
+    threshold = [-12 -9 -10];
+    size = [60, 120, 250];
     temp = diff < threshold(c);
     BL = zeros(length(temp), length(temp));
-    BL(690:1013, 38:880) = temp(690:1013, 38:880);
-    TB = bwareaopen(BL,size);
+    switch c
+        case 2
+            BL(704:1024, 1:764) = temp(704:1024, 1:764);
+        case 3
+            BL(720:1024, 1:838) = temp(720:1024, 1:838);
+        otherwise
+            BL = temp;
+    end
+    %     BL(690:1013, 38:880) = temp(690:1013, 38:880);
+    TB = bwareaopen(BL,size(c));
+    imtool(TB,[]);
     
     T = TB + TW;
+    
     if(display)
-        
         figure(fig);
         fig = fig + 1;
         imshow(T,[]);title('Differencia binaria')
@@ -112,12 +128,14 @@ for c = 1:3
     
     J(:,:,c) = g;
 end
-figure(fig);
-fig = fig + 1;
+
 size = 110;
 FENCE = bwareaopen(FENCE,size);
-imshow(FENCE,[]);title('reja acumulada')
-
+% if(display)
+    figure(fig);
+    fig = fig + 1;
+    imshow(FENCE);title('Reja binaria')
+% end
 % F = fft2(FENCE);
 % F_ = fftshift(F);
 % H = log(F_ + 1);
@@ -128,21 +146,19 @@ imshow(FENCE,[]);title('reja acumulada')
 % imshow(H, []);title('Transformada de la reja');
 
 
-
-figure(fig);
-fig = fig + 1;
-
-WF = zeros(1024, 1024, 3);
 I = imread('venado.png');
-
+WF = I;
 for c = 1:3
     K = double(I(:,:,c));
-    K = K;
+    K = K - 255 *FENCE;
     WF(:,:,c) = K;
-    imshow(WF,[]);title('Final sin reja')
-    pause(0.5);
 end
-imshow(I);title('Final sin reja')
+
+if(display)
+    figure(fig);
+    fig = fig + 1;
+    imshow(WF);title('Final sin reja')
+end
 
 if(display)
     figure(fig);
