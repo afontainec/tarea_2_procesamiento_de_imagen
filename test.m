@@ -60,51 +60,33 @@ for c = 1:3
     figure(fig);
     fig = fig + 1;;
     imshow(G,[]);title('Transformada ajustada')
-%     pause
-%     [x, y] = getpts;
-    
-    str = "";
-    for k = 1:length(x)
-        str = str +  x(k) + " " + y(k) + ";";
-        
-    end
-    disp(str);
-    
-    figure(fig);
-    fig = fig + 1;
     
     g=ifft2(ifftshift(exp(G) - 1));
+    figure(fig);
+    fig = fig + 1;    
     imshow(g,[]);title('devuelta')
     
+    diff=f - g;
     figure(fig);
     fig = fig + 1;
-    
-    diff=f - g;
     imshow(diff,[]);title('Differencia')
     
-    figure(fig);
-    fig = fig + 1;
+
     threshold = [11 13 13];
     W = diff>threshold(c);
     size = 60;
     TW = bwareaopen(W,size);
     TW(715:998, 58:820) = 0;
-    imshow(TW,[]);title('Differencia binaria W')
-
 
     threshold = [-12 -10 -10];
     temp = diff < threshold(c);
     BL = zeros(length(temp), length(temp));
     BL(690:1013, 38:880) = temp(690:1013, 38:880);
-    figure(fig);
-    fig = fig + 1;
     TB = bwareaopen(BL,size);
-    imshow(TB,[]);title('Differencia binaria BL')
-
     
+    T = TB + TW;
     figure(fig);
     fig = fig + 1;
-    T = TB + TW;
     imshow(T,[]);title('Differencia binaria juntas')
 
 
@@ -115,17 +97,18 @@ for c = 1:3
 end
 figure(fig);
 fig = fig + 1;    
-for size = 60:150
-T = FENCE;
-T = bwareaopen(T,size);
-imshow(T,[]);title("reja acumulada " + size)
-pause(0.2);
-end
+size = 110;
+FENCE = bwareaopen(FENCE,size);
+imshow(FENCE,[]);title('reja acumulada')
 
 
 figure(fig);
 fig = fig + 1;
 imshow(J,[]);title('Final a color')
+
+
+
+
 
 
 
